@@ -1,4 +1,5 @@
 class TasksController < ApplicationController
+  before_action :set_task, only: %i[edit update destroy] # %i[]で要素がシンボルの配列を作成できる
   # Task一覧ページ表示
   def index
     @tasks = Task.all
@@ -19,12 +20,10 @@ class TasksController < ApplicationController
 
   # Task編集画面表示
   def edit
-    @task = Task.find(params[:id])
   end
 
   # Task更新処理
   def update
-    @task = Task.find(params[:id])
     if @task.update(task_params)
       redirect_to tasks_path
     end
@@ -32,7 +31,6 @@ class TasksController < ApplicationController
 
   # Task削除処理
   def destroy
-    @task = Task.find(params[:id])
     @task.destroy
     redirect_to tasks_path
   end
@@ -42,5 +40,10 @@ class TasksController < ApplicationController
   private
   def task_params
     params.require(:task).permit(:content)
+  end
+
+  # id指定でTaskを取得
+  def set_task
+    @task = Task.find(params[:id])
   end
 end
